@@ -1,0 +1,50 @@
+# 将镜像同步至个人阿里云仓库
+name: Sync-Images
+run-name: ${{ github.actor }} is Sync Images to personal imageHub.
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# 工作流程任务
+jobs:
+  syncimages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: pick up latest imageName
+        id: changes
+        run: |
+          FILES=$(git show --name-only --pretty=format: HEAD)
+          # Replace newline characters with a placeholder
+          FILES_ESCAPED=$(echo "$FILES" | tr '\n' '\\n')
+          echo "FILES: $FILES"
+          echo "CHANGED_FILES=$FILES_ESCAPED" >> $GITHUB_ENV
+
+      - name: read file
+        if: contains(env.CHANGED_FILES, 'imageFile')
+        id: read_image_file
+        run: |
+          IMAGE=$(awk 'NF' imageFile | tail -n 1)
+          IMAGE_NAME=$(echo $IMAGE | awk -F/ '{print $NF}')
+          echo "ORIGIN_DOCKER_IMAGE=$IMAGE" >> $GITHUB_ENV
+          echo "MY_DOCKER_IMAGE=$IMAGE_NAME" >> $GITHUB_ENV
+
+      - name: Login to ghrc Repo
+        uses: ../actions
+        with:
+          registry: ${{ secrets.REPO_URL }}
+          username: ${{ secrets.REPO_USERNAME }}
+          password: ${{ secrets.REPO_PASSWORD }}
+          logout: false
+
+      - name: Use Skopeo Tools Sync Image to Aliyun Hub
+        run: |
+          #!/usr/bin/env bash
+          skopeo copy docker://docker.io/${{ env.ORIGIN_DOCKER_IMAGE }} docker://${{ secrets.REPO_URL }}/lyarmor/${{ env.MY_DOCKER_IMAGE }}
