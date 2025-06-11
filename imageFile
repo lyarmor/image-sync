@@ -1,3 +1,4 @@
 archlinux:base
 mysql:8.0
 xhofe/alist:latest-aio
+redis:6.2
