@@ -44,7 +44,8 @@ jobs:
           password: ${{ secrets.REPO_PASSWORD }}
           logout: false
 
-      - name: Use Skopeo Tools Sync Image to Aliyun Hub
+      - name: Use Skopeo Tools Sync Image to gitHub
         run: |
           #!/usr/bin/env bash
           skopeo copy docker://docker.io/${{ env.ORIGIN_DOCKER_IMAGE }} docker://${{ secrets.REPO_URL }}/lyarmor/${{ env.MY_DOCKER_IMAGE }}
+          docker logout
