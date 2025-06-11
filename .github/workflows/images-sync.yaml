@@ -37,7 +37,7 @@ jobs:
           echo "MY_DOCKER_IMAGE=$IMAGE_NAME" >> $GITHUB_ENV
 
       - name: Login to ghrc Repo
-        uses: Charion-cz/image-sysn@v1
+        uses: lyarmor/image-sysn@v1
         with:
           registry: ${{ secrets.REPO_URL }}
           username: ${{ secrets.REPO_USERNAME }}
