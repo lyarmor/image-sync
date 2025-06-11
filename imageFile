@@ -5,3 +5,4 @@ redis:6.2
 nginx:latest
 ollama/ollama:latest
 dickhub/docker-osx:ventura
+sickcodes/docker-osx:latest
