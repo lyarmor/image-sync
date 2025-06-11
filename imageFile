@@ -7,3 +7,4 @@ ollama/ollama:latest
 dickhub/docker-osx:ventura
 sickcodes/docker-osx:latest
 nacos/nacos-server:v2.3.0-slim
+apache/rocketmq:5.2.0
